@@ -47,6 +47,11 @@ class RomanNumeralsSpec extends ObjectBehavior
       $this->convert('C')->shouldReturn(100);
     }
 
+    function it_returns_500_for_D()
+    {
+      $this->convert('D')->shouldReturn(500);
+    }
+
     function it_returns_1000_for_M()
     {
       $this->convert('M')->shouldReturn(1000);
@@ -55,6 +60,11 @@ class RomanNumeralsSpec extends ObjectBehavior
     function it_returns_279_for_CCLXXIX()
     {
       $this->convert('CCLXXIX')->shouldReturn(279);
+    }
+
+    function it_returns_400_for_CD()
+    {
+      $this->convert('CD')->shouldReturn(400);
     }
 
     function it_returns_900_for_CM()
