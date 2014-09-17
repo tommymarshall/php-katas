@@ -2,6 +2,8 @@
 
 class BowlingGame
 {
+    const FRAMES_PER_GAME = 10;
+
     protected $rolls = [];
 
     protected $frameScore = [];
@@ -17,29 +19,43 @@ class BowlingGame
     {
         $roll = 0;
 
-        for ($frame = 1; $frame < 10; $frame++) {
-            $this->frameScore[$frame] = 0;
+        for ($frame = 1; $frame <= self::FRAMES_PER_GAME; $frame++) {
+            if ($this->rolledAStrike($roll)) {
+                $this->frameScore[$frame] = 10 + $this->strikeBonus($roll);
 
-            if ($this->scoredASpare($roll)) {
-                $this->frameScore[$frame] += $this->rolls[$roll];
-                $roll += 2;
-            } else if ($this->scoredAStrike($roll)) {
-                $this->frameScore[$frame] += $this->rolls[$roll] + $this->rolls[$roll+1];
                 $roll += 1;
+            } else if ($this->rolledASpare($roll)) {
+                $this->frameScore[$frame] = 10 + $this->spareBonus($roll);
+
+                $roll += 2;
             } else {
-                $this->frameScore[$frame] += $this->rolls[$roll] + $this->rolls[$roll+1];
+                $this->frameScore[$frame] = $this->scoreNormally($roll);
+
                 $roll += 2;
             }
         }
 
-        return array_sum($frameScore);
+        return array_sum($this->frameScore);
     }
 
-    public function scoredASpare($roll) {
+    protected function rolledASpare($roll) {
         return $this->rolls[$roll] + $this->rolls[$roll+1] == 10;
     }
 
-    public function scoredAStrike($roll) {
+    protected function rolledAStrike($roll) {
         return $this->rolls[$roll] == 10;
     }
+
+    protected function strikeBonus($roll) {
+        return $this->rolls[$roll + 1] + $this->rolls[$roll + 2];
+    }
+
+    protected function spareBonus($roll) {
+        return $this->rolls[$roll + 2];
+    }
+
+    protected function scoreNormally($roll) {
+        return $this->rolls[$roll] + $this->rolls[$roll + 1];
+    }
+
 }
